@@ -1,4 +1,5 @@
 
+
 def to_dict(df):
 	"""Generic function to convert data frame into formatted dictionary to send registers to database"""
 	# Extract the names
@@ -34,3 +35,12 @@ def to_tuple(df):
 		df_list.append(tuple(temp_list.copy()))
 	
 	return df_list
+
+	
+# Iterate over dataframes and send to dbs with sqlalchemy
+params = urllib.parse.quote(conn_str)
+engine = sqlalchemy.create_engine("mssql+pyodbc:///?odbc_connect=%s" % params)
+for idx in range(len(files)):
+	string = df_names[idx] + ".to_sql('" + file_names[idx] + "', engine, index = None, if_exists = 'append')"
+	exec(string)
+
